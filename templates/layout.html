@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+  <!--Import Google Icon Font-->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+  <!-- <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"> -->
+  <!--Import materialize.css-->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+  <!--Let browser know website is optimized for mobile-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+  <title>SOCCER.tkinvt.com</title>
+
+  <style>
+    .card-content .post-body {
+      margin-top: 0px;
+    }
+
+    .card-content .post-date, .card-content .post-title {
+      margin-top: 0px;
+      margin-bottom: 0px;
+    }
+  </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+  <div class="row" style="margin-top:2%">
+    <div class="col s12 l8 offset-l2">
+      <a href="{{ url_for('index') }}"><img src="{{ url_for('static', filename='header_pale.jpg') }}" alt="" width="100%" style="padding:0px;"></a>
+      <h6 class="center-align" style="margin-bottom:10px;">My boring, dumb or otherwise tedious soccer thoughts so Perry doesn't have to listen to them blog</h6>
+      <nav class="z-depth-0 grey lighten-4" style="overflow:hidden;">
+        <div class="nav-wrapper">
+          <ul id="nav-mobile" class="hide-on-med-and-down">
+            <li><a href="{{ url_for('about') }}" class="black-text" title="About"><i class="fas fa-info-circle"></i></a></li>
+            <li><a href="{{ url_for('longer') }}" class="black-text" title="Longer ones"><i class="fas fa-book"></i></a></li>
+            <li style="margin-left:10px;margin-right:10px;" class="black-text">|</li>
+            <li><a href="{{ url_for('tags') }}" class="black-text" title="Tags"><i class="fas fa-tags"></i></a></li>
+            {% for tag in tags %}
+            <li><a href="{{ url_for('tagged_posts', tag=tag) }}" class="grey-text">#{{ tag }}</a></li>
+            {% endfor %}
+          </ul>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+{% block body %}{% endblock %}
+
+  <br><br>
+  <footer class="row">
+    <div class="col s12 l8 offset-l2">
+    <div class="divider">
+    </div>
+    <p class="center-align" style="font-size:9px;margin-bottom:1px;">&copy;2019 TK</p>
+    </div>
+  </footer>
+
+</div>
+
+  <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+
+  {% block jsblock %}{% endblock %}
+
+</body>
+</html>

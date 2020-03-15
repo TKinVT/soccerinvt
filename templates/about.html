@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+{% block body %}
+
+<div class="row">
+  <div class="col s12 l8 offset-l2">
+    <div class="card z-depth-0 grey lighten-4">
+    <div class="card-content">
+      <h4>About this blog</h4>
+      <p>My name is TK. Odds are, if you're here you know who I am. Check out <a href="http://www.tkinvt.com">tkinvt.com</a>, for more.</p>
+      <br>
+      <h5>Disclaimer</h5>
+      <p>This website exists to be a repository of my thoughts and feelings about soccer in general, and Arsenal and its players in particular. When these writings are assertive, know that this is a stylistic choice, that I acknowledge my subjective opinions are not objective fact.
+      </p>
+      <br>
+      <p>I am not a soccer expert. I love soccer, but these writings are as much an exercise in improving my understanding as they are a demonstration of any insight or knowledge.
+      </p>
+      <br>
+      <p>I am biased. I do my best to account for bias in my thoughts and writings, but welcome any observation of their presence. However, I acknowledge and tend to disregard what I call benign bias  -- these are biases that I believe are minimally harmful in that they are biased against an entrenched, powerful entity (preference for Anglo announcers vs. American, e.g.) or between socio-politically irrelevant entities (e.g. preference for Arsenal vs. Tottenham).
+      </p>
+      <br>
+      <h5>#ffg // For Future Generations</h5>
+      <p>The purpose of these posts, tagged  <a href="{{ url_for('tagged_posts', tag='ffg') }}">#ffg</a>, is to record my perspective on modern and near-modern players for reference to future generations. You see, I'm a lucky dude: in addition to my father, I have a brilliant, observant uncle. I have had two lodes of knowledge to mine when in search of historical perspective in baseball, basketball, football and even hockey.
+      </p>
+      <br>
+      <p>When I check an athlete's wikipedia page, I'm always hopeful there will be a "Style of Play" section or equivalent. These little bits of knowledge are so evocative for understanding how an athlete fit into his team, his league, his era.  Too often these are lost to the past or, more likely, buried deep in old magazine articles and the skulls of old-timers.
+      </p>
+    </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
