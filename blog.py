@@ -1,10 +1,19 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 import requests
 
 import posts
 
 app = Flask(__name__)
 
+
+@app.route('/slack', methods=['POST'])
+def slack():
+    r = request.form
+    if r['user_id'] == "UG9RLD8FL":
+        posts.new_post(r['text'])
+        return ""
+    else:
+        return "Nuh uh uh"
 
 @app.route('/longer')
 def longer():
@@ -38,4 +47,4 @@ def index():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host="0.0.0.0")
