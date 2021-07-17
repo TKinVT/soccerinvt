@@ -14,6 +14,7 @@ connect('tkinvt', host=f"mongodb+srv://{USERNAME}:{PASSWORD}@{URL}?retryWrites=t
 class Post(Document):
     content = StringField(required=True)
     date = DateTimeField(default=datetime.utcnow, required=True)
+    display_date =StringField(default=datetime.utcnow().strftime('%d/%b/%y'), required=True)
     photo = URLField()
     tags = ListField(StringField(max_length=90))
     title = StringField(max_length=90)

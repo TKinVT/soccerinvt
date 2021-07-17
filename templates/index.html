@@ -18,7 +18,7 @@
     {% if post.title %}
     <h4 class="post-title">{{ post.title|safe }}</h4>
     {% endif %}
-    <p class="grey-text post-date">{{ post.date }}</p>
+    <p class="grey-text post-date">{{ post.display_date }}</p>
     <p class="post-body">{{ post.content|safe }}</p>
     {% if post.tags %}
     <br>
