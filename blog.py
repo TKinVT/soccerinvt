@@ -1,7 +1,8 @@
 from flask import Flask, render_template, request
 import requests
-
 import posts
+import slack_funcs
+
 
 app = Flask(__name__)
 
@@ -10,7 +11,9 @@ app = Flask(__name__)
 def slack():
     r = request.form
     if r['user_id'] == "UG9RLD8FL":
-        posts.new_post(r['text'])
+        text = r['text']
+        post = slack_funcs.post_parser(text)
+        posts.new_post(post['text'], title=post['title'], tags=post['tags'])
         return ""
     else:
         return "Nuh uh uh"
