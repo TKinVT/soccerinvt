@@ -1,10 +1,24 @@
 from flask import Flask, render_template, request
 import requests
-import posts
-import slack_funcs
+import posts, slack_funcs, image_search
+import json
 
 
 app = Flask(__name__)
+
+
+@app.route('/slack_action', methods=['POST'])
+def slack_action():
+    payload = json.loads(request.form['payload'])
+    # import pprint
+    # pprint.pprint(payload)
+    if "image_selection" in payload['actions'][0]['action_id']:
+        # We use the block's action_id to encode the Post's id
+        post_id = payload['actions'][0]['action_id'].split("|")[1]
+        pic_url = payload['actions'][0]['value']
+        posts.update_post(post_id, photo=pic_url)
+    r = requests.post(payload['response_url'], json={"delete_original": "true"})
+    return ""
 
 
 @app.route('/slack', methods=['POST'])
@@ -13,8 +27,9 @@ def slack():
     if r['user_id'] == "UG9RLD8FL":
         text = r['text']
         post = slack_funcs.post_parser(text)
-        posts.new_post(post['text'], title=post['title'], tags=post['tags'])
-        return ""
+        post_id = posts.new_post(post['text'], title=post['title'], tags=post['tags'])
+        pics = image_search.image_search(post['text'])
+        return slack_funcs.pic_choice(pics, post_id)
     else:
         return "Nuh uh uh"
 

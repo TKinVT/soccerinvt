@@ -90,8 +90,8 @@ def header_tags():
 
 def new_post(content, photo=None, tags=None, title=None):
     p = Post(content=content, photo=photo, tags=tags, title=title)
-
-    return p.save()
+    p.save()
+    return p.id
 
 
 def update_post(id, **items):
