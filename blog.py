@@ -28,7 +28,7 @@ def slack():
         text = r['text']
         post = slack_funcs.post_parser(text)
         post_id = posts.new_post(post['text'], title=post['title'], tags=post['tags'])
-        pics = image_search.image_search(post['text'])
+        pics = image_search.image_search(text)
         return slack_funcs.pic_choice(pics, post_id)
     else:
         return "Nuh uh uh"
