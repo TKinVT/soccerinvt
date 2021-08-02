@@ -14,11 +14,11 @@
   <title>SOCCER.tkinvt.com</title>
 
   <style>
-    .card-content .post-body {
+    .card-content .post-body, .card-content .post-title {
       margin-top: 0px;
     }
 
-    .card-content .post-date, .card-content .post-title {
+    .card-content .post-date, .date_tag_row {
       margin-top: 0px;
       margin-bottom: 0px;
     }
@@ -36,9 +36,9 @@
       <h6 class="center-align" style="margin-bottom:10px;">My boring, dumb or otherwise tedious soccer thoughts so Perry doesn't have to listen to them blog</h6>
       <nav class="z-depth-0 grey lighten-4" style="overflow:hidden;">
         <div class="nav-wrapper">
-          <ul id="nav-mobile" class="hide-on-med-and-down">
+          <ul id="nav-mobile">
             <li><a href="{{ url_for('about') }}" class="black-text" title="About"><i class="fas fa-info-circle"></i></a></li>
-            <li><a href="{{ url_for('longer') }}" class="black-text" title="Longer ones"><i class="fas fa-book"></i></a></li>
+            <!-- <li><a href="{{ url_for('longer') }}" class="black-text" title="Longer ones"><i class="fas fa-book"></i></a></li> -->
             <li style="margin-left:10px;margin-right:10px;" class="black-text">|</li>
             <li><a href="{{ url_for('tags') }}" class="black-text" title="Tags"><i class="fas fa-tags"></i></a></li>
             {% for tag in tags %}
@@ -57,7 +57,7 @@
     <div class="col s12 l8 offset-l2">
     <div class="divider">
     </div>
-    <p class="center-align" style="font-size:9px;margin-bottom:1px;">&copy;2019 TK</p>
+    <p class="center-align" style="font-size:9px;margin-bottom:1px;">&copy;2021TK</p>
     </div>
   </footer>
 
