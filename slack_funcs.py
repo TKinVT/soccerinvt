@@ -1,16 +1,18 @@
 import re
+import os
+import requests
+import slack_views
+from dotenv import load_dotenv
 
+load_dotenv()
+
+
+SLACK_BOT_TOKEN = os.getenv("SLACK_BOT_TOKEN")
+VIEW_OPEN_URL = 'https://slack.com/api/views.open'
+# VIEW_UPDATE_URL = 'https://slack.com/api/views.update'
+HEADERS = {"Authorization": "Bearer {}".format(SLACK_BOT_TOKEN)}
 
 def post_parser(text):
-    # Deal with title if it exists
-    title_re = "!!.+!!"
-    title = re.search(title_re, text)
-    if title:
-        # If title exists, strip away exclamation points
-        title = title.group()[2:-2]
-        # Remove title, and whitespace, from text
-        text = re.sub(title_re, "", text).strip()
-
     # Deal with tags if they exist
     tags = None
     if "#" in text:
@@ -18,7 +20,7 @@ def post_parser(text):
         text = split[0].strip()
         tags = [tag.strip() for tag in split[1:]]
 
-    return {"text":text, "title":title, "tags":tags}
+    return {"text":text, "tags":tags}
 
 
 def pic_choice(pics, post_id):
@@ -105,3 +107,10 @@ def pic_choice(pics, post_id):
         blocks.append(element)
 
     return slack_blocks
+
+
+def open_modal(trigger_id):
+    view = slack_views.new_post_view
+    json = {'trigger_id': trigger_id, 'view': view}
+    r = requests.post(VIEW_OPEN_URL, headers=HEADERS, json=json)
+    return ""

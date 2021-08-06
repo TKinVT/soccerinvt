@@ -89,6 +89,10 @@ def header_tags():
 #############################
 
 def new_post(content, photo=None, tags=None, title=None):
+    if tags:
+        print(tags)
+        tags.sort()
+        print(tags)
     p = Post(content=content, photo=photo, tags=tags, title=title)
     p.save()
     return p.id

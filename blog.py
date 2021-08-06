@@ -7,32 +7,7 @@ import json
 app = Flask(__name__)
 
 
-@app.route('/slack_action', methods=['POST'])
-def slack_action():
-    payload = json.loads(request.form['payload'])
-    # import pprint
-    # pprint.pprint(payload)
-    if "image_selection" in payload['actions'][0]['action_id']:
-        # We use the block's action_id to encode the Post's id
-        post_id = payload['actions'][0]['action_id'].split("|")[1]
-        pic_url = payload['actions'][0]['value']
-        posts.update_post(post_id, photo=pic_url)
-    r = requests.post(payload['response_url'], json={"delete_original": "true"})
-    return ""
-
-
-@app.route('/slack', methods=['POST'])
-def slack():
-    r = request.form
-    if r['user_id'] == "UG9RLD8FL":
-        text = r['text']
-        post = slack_funcs.post_parser(text)
-        post_id = posts.new_post(post['text'], title=post['title'], tags=post['tags'])
-        pics = image_search.image_search(text)
-        return slack_funcs.pic_choice(pics, post_id)
-    else:
-        return "Nuh uh uh"
-
+# BLOG GET ROUTES
 @app.route('/longer')
 def longer():
     long_posts = posts.get_long_posts()
@@ -62,6 +37,45 @@ def about():
 @app.route('/')
 def index():
         return render_template('index.html', posts=posts.get_posts(), tags=posts.header_tags())
+
+
+# SLACK POST ROUTES
+@app.route('/slack_action', methods=['POST'])
+def slack_action():
+    payload = json.loads(request.form['payload'])
+    if 'actions' in payload:
+        if "image_selection" in payload['actions'][0]['action_id']:
+            # We use the block's action_id to encode the Post's id
+            post_id = payload['actions'][0]['action_id'].split("|")[1]
+            pic_url = payload['actions'][0]['value']
+            posts.update_post(post_id, photo=pic_url)
+            r = requests.post(payload['response_url'], json={"delete_original": "true"})
+    else:
+        values = payload['view']['state']['values']
+        title = values['title']['text']['value']
+        body = values['body']['text']['value']
+        photo_url = values['photo_url']['text']['value']
+        tags = values['tags']['text']['value']
+        if tags:
+            tags = [x.strip() for x in tags.split(",")]
+        posts.new_post(body, title=title, photo=photo_url, tags=tags)
+
+    return ""
+
+
+@app.route('/slack', methods=['POST'])
+def slack():
+    r = request.form
+    if r['user_id'] == "UG9RLD8FL":
+        text = r['text']
+        if len(text) < 1:
+            return slack_funcs.open_modal(r['trigger_id'])
+        else:
+            post = slack_funcs.post_parser(text)
+            posts.new_post(post['text'], tags=post['tags'])
+            return "Got it :thumbsup:"
+    else:
+        return "Nuh uh uh"
 
 
 if __name__ == '__main__':
