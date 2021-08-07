@@ -1,5 +1,6 @@
 new_post_view = {
     "type": "modal",
+    "callback_id": "new_post",
     "submit": {
         "type": "plain_text",
         "text": "Submit",
@@ -77,4 +78,108 @@ new_post_view = {
             }
         }
     ]
+}
+
+photos_view = {
+	"type": "modal",
+    "callback_id": "search_photos",
+    "private_metadata": None,
+	"close": {
+		"type": "plain_text",
+		"text": "Cancel",
+		"emoji": True
+	},
+	"title": {
+		"type": "plain_text",
+		"text": "Photo Search",
+		"emoji": True
+	},
+	"blocks": [
+		{
+			"type": "input",
+            "dispatch_action": True,
+            "block_id": "search_term",
+			"element": {
+				"type": "plain_text_input",
+				"action_id": "search_photos"
+			},
+			"label": {
+				"type": "plain_text",
+				"text": "Search Term",
+				"emoji": True
+			}
+		}
+	]
+}
+
+results_view_base =  {
+	"type": "modal",
+    "callback_id": "search_results",
+    "private_metadata": None,
+    "submit": {
+		"type": "plain_text",
+		"text": "New Search",
+		"emoji": True
+	},
+	"close": {
+		"type": "plain_text",
+		"text": "Cancel",
+		"emoji": True
+	},
+	"title": {
+		"type": "plain_text",
+		"text": "Photo Search",
+		"emoji": True
+	},
+	"blocks": []
+}
+
+photo_block_elements = [
+    {
+        "type": "divider"
+    },
+    {
+        "type": "image",
+        "image_url": None,
+        "alt_text": "arsenal"
+    },
+    {
+    "type": "actions",
+    "elements": [
+        {
+            "type": "button",
+            "text": {
+                "type": "plain_text",
+                "text": "Use This One",
+                "emoji": True
+            },
+            "value": None,
+            "action_id": "image_selection"
+        }
+      ]
+    }
+]
+
+confirmation_view = {
+	"type": "modal",
+	"close": {
+		"type": "plain_text",
+		"text": "Close",
+		"emoji": True
+	},
+	"title": {
+		"type": "plain_text",
+		"text": "Submission confirmed",
+		"emoji": True
+	},
+	"blocks": [
+		{
+			"type": "section",
+			"text": {
+				"type": "plain_text",
+				"text": "Got it :thumbsup:",
+				"emoji": True
+			}
+		}
+	]
 }

@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request
 import requests
-import posts, slack_funcs, image_search
+import posts, slack_funcs, image_search, slack_views
 import json
 
 
@@ -43,22 +43,63 @@ def index():
 @app.route('/slack_action', methods=['POST'])
 def slack_action():
     payload = json.loads(request.form['payload'])
-    if 'actions' in payload:
-        if "image_selection" in payload['actions'][0]['action_id']:
+    type = payload['type']
+
+    if type == 'block_actions':
+        action = payload['actions'][0]
+        action_id = payload['actions'][0]['action_id']
+        trigger_id = payload['trigger_id']
+        print(action)
+        if 'image_selection' in action_id:
+            # import pprint
+            # pprint.pprint(payload['actions'])
+            view_id = payload['view']['id']
             # We use the block's action_id to encode the Post's id
             post_id = payload['actions'][0]['action_id'].split("|")[1]
             pic_url = payload['actions'][0]['value']
             posts.update_post(post_id, photo=pic_url)
-            r = requests.post(payload['response_url'], json={"delete_original": "true"})
-    else:
+            r = slack_funcs.confirm_submission(view_id)
+            # r = requests.post(payload['response_url'], json={"delete_original": "true"})
+
+        elif action_id == 'search_photos':
+            view_id = payload['view']['id']
+            post_id = payload['view']['private_metadata']
+            values = payload['view']['state']['values']
+            print(values)
+            search_term = values['search_term']['search_photos']['value']
+            # view = slack_funcs.update_modal_photo_search_results(search_term, post_id)
+            r = slack_funcs.update_modal_photo_search_results(search_term, post_id, view_id)
+
+    elif type == 'view_submission':
+        callback_id = payload['view']['callback_id']
         values = payload['view']['state']['values']
-        title = values['title']['text']['value']
-        body = values['body']['text']['value']
-        photo_url = values['photo_url']['text']['value']
-        tags = values['tags']['text']['value']
-        if tags:
-            tags = [x.strip() for x in tags.split(",")]
-        posts.new_post(body, title=title, photo=photo_url, tags=tags)
+
+        if callback_id == 'new_post':
+            title = values['title']['text']['value']
+            body = values['body']['text']['value']
+            photo_url = values['photo_url']['text']['value']
+            tags = values['tags']['text']['value']
+            if tags:
+                tags = [x.strip() for x in tags.split(",")]
+            post_id = posts.new_post(body, title=title, photo=photo_url, tags=tags)
+            post_id = str(post_id)
+
+            if photo_url:
+                return 'Got it :thumbsup:'
+            else:
+                view = slack_funcs.update_modal_photo_search(post_id)
+                return {'response_action': 'update', 'view': view}
+
+        # elif callback_id == 'search_photos':
+        #     post_id = payload['view']['private_metadata']
+        #     search_term = values['search_term']['text']['value']
+        #     view = slack_funcs.update_modal_photo_search_results(search_term, post_id)
+        #     return {'response_action': 'update', 'view': view}
+
+        elif callback_id == 'search_results':
+            post_id = payload['view']['private_metadata']
+            view = slack_funcs.update_modal_photo_search(post_id)
+            return {'response_action': 'update', 'view': view}
 
     return ""
 
