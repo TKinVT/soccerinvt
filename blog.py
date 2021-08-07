@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request
 import requests
-import posts, slack_funcs, image_search, slack_views
+import posts, slack_funcs
 import json
 
 
@@ -48,27 +48,21 @@ def slack_action():
     if type == 'block_actions':
         action = payload['actions'][0]
         action_id = payload['actions'][0]['action_id']
-        trigger_id = payload['trigger_id']
-        print(action)
-        if 'image_selection' in action_id:
-            # import pprint
-            # pprint.pprint(payload['actions'])
+
+        if action_id == 'image_selection':
             view_id = payload['view']['id']
             # We use the block's action_id to encode the Post's id
-            post_id = payload['actions'][0]['action_id'].split("|")[1]
+            post_id = payload['view']['private_metadata']
             pic_url = payload['actions'][0]['value']
             posts.update_post(post_id, photo=pic_url)
             r = slack_funcs.confirm_submission(view_id)
-            # r = requests.post(payload['response_url'], json={"delete_original": "true"})
 
         elif action_id == 'search_photos':
             view_id = payload['view']['id']
             post_id = payload['view']['private_metadata']
             values = payload['view']['state']['values']
-            print(values)
             search_term = values['search_term']['search_photos']['value']
-            # view = slack_funcs.update_modal_photo_search_results(search_term, post_id)
-            r = slack_funcs.update_modal_photo_search_results(search_term, post_id, view_id)
+            r = slack_funcs.update_modal_search_results(search_term, post_id, view_id)
 
     elif type == 'view_submission':
         callback_id = payload['view']['callback_id']
@@ -90,12 +84,6 @@ def slack_action():
                 view = slack_funcs.update_modal_photo_search(post_id)
                 return {'response_action': 'update', 'view': view}
 
-        # elif callback_id == 'search_photos':
-        #     post_id = payload['view']['private_metadata']
-        #     search_term = values['search_term']['text']['value']
-        #     view = slack_funcs.update_modal_photo_search_results(search_term, post_id)
-        #     return {'response_action': 'update', 'view': view}
-
         elif callback_id == 'search_results':
             post_id = payload['view']['private_metadata']
             view = slack_funcs.update_modal_photo_search(post_id)
@@ -109,8 +97,9 @@ def slack():
     r = request.form
     if r['user_id'] == "UG9RLD8FL":
         text = r['text']
+        trigger_id = r['trigger_id']
         if len(text) < 1:
-            return slack_funcs.open_modal(r['trigger_id'])
+            return slack_funcs.open_modal(trigger_id)
         else:
             post = slack_funcs.post_parser(text)
             posts.new_post(post['text'], tags=post['tags'])

@@ -80,7 +80,7 @@ new_post_view = {
     ]
 }
 
-photos_view = {
+photo_search_view = {
 	"type": "modal",
     "callback_id": "search_photos",
     "private_metadata": None,
@@ -134,31 +134,32 @@ results_view_base =  {
 	"blocks": []
 }
 
-photo_block_elements = [
-    {
-        "type": "divider"
-    },
-    {
+def make_photo_block(image_url):
+    block_list = [{
         "type": "image",
-        "image_url": None,
+        "image_url": image_url,
         "alt_text": "arsenal"
     },
     {
     "type": "actions",
-    "elements": [
-        {
+    "elements": [{
             "type": "button",
             "text": {
                 "type": "plain_text",
                 "text": "Use This One",
                 "emoji": True
             },
-            "value": None,
+            "value": image_url,
             "action_id": "image_selection"
-        }
-      ]
-    }
-]
+        }]
+    }]
+
+    return block_list
+
+divider_block = {
+    "type": "divider"
+}
+
 
 confirmation_view = {
 	"type": "modal",
