@@ -1,0 +1,12 @@
+{
+    "dev": {
+        "app_function": "blog.app",
+        "aws_region": "us-east-1",
+        "profile_name": "default",
+        "project_name": "soccer-blog",
+        "runtime": "python3.6",
+        "s3_bucket": "zappa-0hg6lvbcr",
+        "certificate_arn":"arn:aws:acm:us-east-1:801286075428:certificate/6c48d5d7-57f1-47eb-a9f9-e448c35f4881",
+        "domain": "soccer.tkinvt.com"
+    }
+}
