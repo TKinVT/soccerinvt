@@ -1,5 +1,8 @@
 __pycache__
 venv
 .env
+<<<<<<< HEAD
 .idea
 zappa_settings.json
+=======
+>>>>>>> fd9d0675d4bb25c9a87636661b6825112af32e79
