@@ -31,6 +31,18 @@ class Post(Document):
             max = sorted([len(self.content), 20])[0]
             return f"{self.id}|{self.content[:max].rstrip()}"
 
+    def add_tag(self, *tags):
+        t = self.tags
+        for tag in tags:
+            t.append(tag)
+        t.sort()
+        self.save()
+
+    def remove_tag(self, *tags):
+        for tag in tags:
+            self.update(pull__tags=tag)
+        self.save()
+
     @classmethod
     def get_tags(cls):
         tags = cls.objects.distinct('tags')
@@ -53,54 +65,7 @@ class Post(Document):
 
         return sorted_tags_list
 
-
-#############################
-#
-# POST & PUT-type Functions
-#
-#############################
-def update_post(id, **items):
-    p = Post.objects.get(id=id)
-    for item in items:
-        print(f"{item}: {items[item]}")
-        p.__setattr__(item, items[item])
-    p.save()
-
-
-def add_tag(id, *tags):
-    p = Post.objects.get(id=id)
-    # for tag in tags:
-    #     p.update(push__tags=tag)
-    t = p.tags
-    for tag in tags:
-        t.append(tag)
-    t.sort()
-    p.save()
-
-
-#############################
-#
-# DELETE-type Functions
-#
-#############################
-def delete_last_post():
-    p = Post.objects[0]
-    p.delete()
-
-
-def delete_post(id):
-    p = Post.objects.get(id=id)
-    p.delete()
-
-
-def remove_attribute(id, *items):
-    p = Post.objects.get(id=id)
-    for item in items:
-        p.__setattr__(item, None)
-    p.save()
-
-
-def remove_tag(id, *tags):
-    p = Post.objects.get(id=id)
-    for tag in tags:
-        p.update(pull__tags=tag)
+    @classmethod
+    def delete_last(cls):
+        last = cls.objects[0]
+        last.delete()
