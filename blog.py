@@ -45,7 +45,6 @@ def longer():
 @app.route('/new', methods=['POST'])
 def new_post():
     data = request.json
-    print(data)
     post = Post(content=data['content'])
 
     if 'title' in data and data['title'] is not None:
@@ -58,7 +57,19 @@ def new_post():
         post.tags = data['tags']
 
     post.save()
+    post_id = str(post.id)
+    return post_id
 
+
+@app.route('/update/<post_id>', methods=['POST'])
+def update_post(post_id):
+    p = Post.objects(id=post_id).first()
+    updates = request.json
+
+    for attribute in updates:
+        p[attribute] = updates[attribute]
+
+    p.save()
     return ""
 
 
